@@ -2,9 +2,27 @@ import Frontend from "@/componentes/Frontend";
 import Link from "next/link";
 import Sidebar from "@/componentes/Sidebar";
 import Aviso from "@/componentes/Aviso";
-import { getCategorias } from "@/servicios/APIRest";
+import { getAvisos, getCategorias } from "@/servicios/APIRest";
 
-const categorias = ({categorias}) => {
+const categorias = ({ categorias, avisos, page }) => {
+    let anterior;
+    let siguiente;
+    let pageMenos1 = parseInt(page) - 1;
+    let pageMas1 = parseInt(page) + 1;
+    if (parseInt(pageMenos1) <= 1) {
+        anterior = 1;
+    } else {
+        anterior = pageMenos1;
+    }
+    if (parseInt(pageMas1) >= avisos.links) {
+        siguiente = avisos.links;
+    } else {
+        siguiente = pageMas1;
+    }
+    let paginas = [];
+    for (let i = 1; i <= avisos.links; i++) {
+        paginas[i] = i;
+    }
     return (
         <>
             <Frontend title={'Categorias'}>
@@ -25,9 +43,9 @@ const categorias = ({categorias}) => {
                                 </nav>
 
                                 <div className="row mb-4 gy-4">
-                                    {/*avisos.datos.map((aviso) => (
+                                    {avisos.datos.map((aviso) => (
                                         <Aviso key={aviso.id} aviso={aviso} />
-                                    ))*/}
+                                    ))}
 
 
                                 </div>
@@ -46,7 +64,7 @@ const categorias = ({categorias}) => {
                                         <li className="page-item mx-1">
                                             <Link
                                                 className="page-link rounded shadow-sm px-3"
-                                                href={''}
+                                                href={`/categorias?page=${anterior}`}
                                                 aria-label="Anterior"
                                                 title="Anterior"
                                             >
@@ -54,7 +72,7 @@ const categorias = ({categorias}) => {
                                             </Link>
                                         </li>
                                         {/*paginación numérica */}
-                                        {/*[...paginas].map((x, i) => (
+                                        {[...paginas].map((x, i) => (
                                             <li className="page-item mx-1" key={i}>
                                                 {i >= 1 && (
                                                     <Link
@@ -65,12 +83,12 @@ const categorias = ({categorias}) => {
                                                     </Link>
                                                 )}
                                             </li>
-                                        ))*/}
+                                        ))}
                                         {/*//paginación numérica */}
                                         <li className="page-item mx-1">
                                             <Link
                                                 className="page-link rounded shadow-sm px-3"
-                                                href={``}
+                                                href={`/categorias?page=${siguiente}`}
                                                 aria-label="Siguiente"
                                                 title="Siguiente"
                                             >
@@ -80,7 +98,7 @@ const categorias = ({categorias}) => {
                                         <li className="page-item mx-1">
                                             <Link
                                                 className="page-link rounded shadow-sm px-3"
-                                                href={``}
+                                                href={`/categorias?page=${avisos.links}`}
                                                 aria-label="Última"
                                                 title="Última"
                                             >
@@ -100,11 +118,14 @@ const categorias = ({categorias}) => {
 
 export default categorias
 
-export async function getStaticProps(){
+export async function getServerSideProps(context) {
+    
+    const page = context.query.page
     const categorias = await getCategorias()
+    const avisos = await getAvisos(page)
     return {
-        props:{
-            categorias
+        props: {
+            categorias, avisos, page
         }
     }
 }
