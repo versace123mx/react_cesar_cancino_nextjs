@@ -1,5 +1,7 @@
 import Frontend from "@/componentes/Frontend";
 import Link from "next/link";
+import Sidebar from "@/componentes/Sidebar";
+
 const categorias = () => {
     return (
         <>
@@ -7,7 +9,7 @@ const categorias = () => {
                 <section className="py-5">
                     <div className="container py-5">
                         <div className="row gy-5">
-                            {/*<Sidebar valor={``} categorias={categorias} />*/}
+                            {<Sidebar valor={``} categorias={''} />}
                             <div className="col-lg-9 order-1 order-lg-2">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb">
