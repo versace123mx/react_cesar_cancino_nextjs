@@ -7,7 +7,7 @@ import Aviso from "@/componentes/Aviso";
 
 const AvisosPorCategoria = () => {
     const router = useRouter()
-    console.log(router.query.slug)//aqui se recupera con el nombre del archivo en este caso slug
+    console.log(router.query.slug)//aqui se recupera con el nombre del archivo en este caso slug, solo un parametro de la url
     return (
         <>
             <Frontend title={'Avisos por Categoria'}>
