@@ -2,15 +2,16 @@ import Frontend from "@/componentes/Frontend";
 import Link from "next/link";
 import Sidebar from "@/componentes/Sidebar";
 import Aviso from "@/componentes/Aviso";
+import { getCategorias } from "@/servicios/APIRest";
 
-const categorias = () => {
+const categorias = ({categorias}) => {
     return (
         <>
             <Frontend title={'Categorias'}>
                 <section className="py-5">
                     <div className="container py-5">
                         <div className="row gy-5">
-                            {<Sidebar valor={``} categorias={''} />}
+                            {<Sidebar valor={``} categorias={categorias} />}
                             <div className="col-lg-9 order-1 order-lg-2">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb">
@@ -98,3 +99,12 @@ const categorias = () => {
 }
 
 export default categorias
+
+export async function getStaticProps(){
+    const categorias = await getCategorias()
+    return {
+        props:{
+            categorias
+        }
+    }
+}

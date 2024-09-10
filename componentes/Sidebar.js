@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Sidebar = ({ valor, categorias }) => {
+const Sidebar = ({valor , categorias }) => {
     return (
         <>
             <div className="col-lg-3 order-2 order-lg-1">
@@ -9,7 +9,7 @@ const Sidebar = ({ valor, categorias }) => {
                 <div className="card border-0 shadow-sm mb-4 p-2">
                     <div className="card-body">
                         <h2 className='Categoría'></h2>
-                        {/*categorias.map((categoria) => (
+                        {categorias.map((categoria) => (
                             <ul key={categoria.id}>
                                 <li>
                                     <Link className={`text text-${(valor == categoria.id) ? 'danger' : 'secondary'}`} href={`/categoria/${categoria.slug}`} title={categoria.nombre}>
@@ -17,7 +17,7 @@ const Sidebar = ({ valor, categorias }) => {
                                     </Link>
                                 </li>
                             </ul>
-                        ))*/}
+                        ))}
                     </div>
                 </div>
             </div>
