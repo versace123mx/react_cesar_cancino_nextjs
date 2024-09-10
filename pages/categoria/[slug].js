@@ -3,95 +3,50 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Sidebar from "@/componentes/Sidebar";
 import Aviso from "@/componentes/Aviso";
+import { getCategorias, getAvisosPorCategoria, getCategoriasPorId } from "@/servicios/APIRest";
 
-
-const AvisosPorCategoria = () => {
+const AvisosPorCategoria = ({ categorias, avisos, cat, handleEstaLogueado, authNombre, handleCerrarSesion }) => {
     const router = useRouter()
     console.log(router.query.slug)//aqui se recupera con el nombre del archivo en este caso slug, solo un parametro de la url
     return (
         <>
-            <Frontend title={'Avisos por Categoria'}>
+            <Frontend title={'Categorías'} authNombre={authNombre} handleCerrarSesion={handleCerrarSesion}>
                 <section className="py-5">
                     <div className="container py-5">
                         <div className="row gy-5">
-                            {<Sidebar valor={``} categorias={''} />}
+                            <Sidebar valor={cat.id} categorias={categorias} />
                             <div className="col-lg-9 order-1 order-lg-2">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb">
                                         <li className="breadcrumb-item">
                                             <Link href="/">Home</Link>
                                         </li>
+                                        <li className="breadcrumb-item">
+                                            <Link href="/categorias">Categorías</Link>
+                                        </li>
                                         <li className="breadcrumb-item active" aria-current="page">
-                                            Categorías
+                                            Categorías: {cat.nombre}
                                         </li>
                                     </ol>
                                 </nav>
-
+                                <div className="row mb-4 align-items-center">
+                                    <div className="col-md-7"></div>
+                                    <div className="col-md-12 text-md-end">
+                                        <p className="h3 mb-0 p-3 p-md-0">
+                                            Se encontraron {avisos.total} registros para la categoría:
+                                            {cat.nombre}
+                                        </p>
+                                        <hr />
+                                    </div>
+                                </div>
                                 <div className="row mb-4 gy-4">
-                                    {/*avisos.datos.map((aviso) => (
+                                    {avisos.datos.map((aviso) => (
                                         <Aviso key={aviso.id} aviso={aviso} />
-                                    ))*/}
+                                    ))}
 
 
                                 </div>
-                                <nav aria-label="Page navigation example">
-                                    <ul className="pagination justify-content-end mb-0">
-                                        <li className="page-item mx-1">
-                                            <Link
-                                                className="page-link rounded shadow-sm px-3"
-                                                href="/categorias?page=1"
-                                                aria-label="Primera"
-                                                title="Primera"
-                                            >
-                                                <span aria-hidden="true">«««</span>
-                                            </Link>
-                                        </li>
-                                        <li className="page-item mx-1">
-                                            <Link
-                                                className="page-link rounded shadow-sm px-3"
-                                                href={''}
-                                                aria-label="Anterior"
-                                                title="Anterior"
-                                            >
-                                                <span aria-hidden="true">«</span>
-                                            </Link>
-                                        </li>
-                                        {/*paginación numérica */}
-                                        {/*[...paginas].map((x, i) => (
-                                            <li className="page-item mx-1" key={i}>
-                                                {i >= 1 && (
-                                                    <Link
-                                                        className="page-link rounded shadow-sm px-3"
-                                                        href={`/categorias?page=${i}`}
-                                                    >
-                                                        {i}
-                                                    </Link>
-                                                )}
-                                            </li>
-                                        ))*/}
-                                        {/*//paginación numérica */}
-                                        <li className="page-item mx-1">
-                                            <Link
-                                                className="page-link rounded shadow-sm px-3"
-                                                href={``}
-                                                aria-label="Siguiente"
-                                                title="Siguiente"
-                                            >
-                                                <span aria-hidden="true">»</span>
-                                            </Link>
-                                        </li>
-                                        <li className="page-item mx-1">
-                                            <Link
-                                                className="page-link rounded shadow-sm px-3"
-                                                href={``}
-                                                aria-label="Última"
-                                                title="Última"
-                                            >
-                                                <span aria-hidden="true">»»»</span>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </nav>
+
                             </div>
                         </div>
                     </div>
@@ -102,3 +57,35 @@ const AvisosPorCategoria = () => {
 }
 
 export default AvisosPorCategoria
+
+//te dejo la tarea de agregarle paginación
+export async function getServerSideProps({ context, params }) {
+    if (params) {
+        let categorias = await getCategorias();
+        let avisos = await getAvisosPorCategoria(params.slug);
+        let cat = await getCategoriasPorId(params.slug);
+        return {
+            props:
+            {
+                categorias, avisos, cat
+            }
+        }
+    }
+
+}
+
+
+/*
+export async function getServerSideProps(context)
+{
+    let page = context.query.page;
+    let categorias = await getCategorias();
+    let avisos = await getAvisos(page);
+    return{
+        props:
+        {
+            categorias, avisos, page
+        }
+    }
+}
+*/
