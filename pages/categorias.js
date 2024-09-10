@@ -1,6 +1,7 @@
 import Frontend from "@/componentes/Frontend";
 import Link from "next/link";
 import Sidebar from "@/componentes/Sidebar";
+import Aviso from "@/componentes/Aviso";
 
 const categorias = () => {
     return (
